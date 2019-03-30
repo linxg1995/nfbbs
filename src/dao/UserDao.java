@@ -142,10 +142,52 @@ public class UserDao {
 	}
 
 	/*
+	 * 更新发帖数（删除） ******************************
+	 */
+	public static boolean subtractPost(String uName) {
+		String sql = "UPDATE user SET upost=upost-1 WHERE uname=?";
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uName);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
 	 * 更新回帖数 ******************************
 	 */
 	public static boolean updateRepost(String uName) {
 		String sql = "UPDATE user SET urepost=urepost+1 WHERE uname=?";
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uName);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
+	 * 更新回帖数（删除） ******************************
+	 */
+	public static boolean subtractRepost(String uName) {
+		String sql = "UPDATE user SET urepost=urepost-1 WHERE uname=?";
 		try {
 			conn = getConn();
 			ps = conn.prepareStatement(sql);

@@ -122,6 +122,56 @@ public class RepostDao {
 	}
 
 	/*
+	 * 计算回帖数 ******************************
+	 */
+	public static List<String> selectRepostUname(String pId) {
+		String sql = "SELECT rpuname FROM repost WHERE rppid=?";
+		String uName = null;
+		List<String> repostUnameList = new ArrayList<String>();
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, Integer.parseInt(pId));
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				uName = new String(rs.getString("rpuname"));
+				repostUnameList.add(uName);
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return repostUnameList;
+	}
+
+	/*
+	 * 删除回帖 ******************************
+	 */
+	public static boolean deleteRepost(String rpId) {
+		String sql = "DELETE FROM repost WHERE rpid=?";
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, rpId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
 	 * 关闭连接 ******************************
 	 */
 	public static void restore(Connection conn, PreparedStatement ps, ResultSet rs) {

@@ -301,6 +301,50 @@ public class PostDao {
 	}
 
 	/*
+	 * 更新回帖数（删除） ******************************
+	 */
+	public static boolean subtractRepost(String pId) {
+		String sql = "UPDATE post SET prepost=prepost-1 WHERE pid=?";
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, pId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
+	 * 删除帖子 ******************************
+	 */
+	public static boolean deletePost(String pId) {
+		String sql = "DELETE FROM post WHERE pid=?";
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, pId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
 	 * 关闭连接 ******************************
 	 */
 	public static void restore(Connection conn, PreparedStatement ps, ResultSet rs) {

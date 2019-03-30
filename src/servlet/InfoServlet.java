@@ -2,7 +2,10 @@ package servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,19 +95,15 @@ public class InfoServlet extends HttpServlet {
 			 */
 			// 存储路径
 			String savePath = request.getServletContext().getRealPath("/img/head");
-			System.out.println("存储路径 " + savePath);
 			// 获取表单中的Part对象
 			Part part = request.getPart("uHead");
 			// 获取请求头，从请求头中获取文件名的后缀名，Tomcat8.0 可以直接用 getSubmittedFileName()
 			String partHeader = part.getHeader("Content-Disposition");
 			String suffix = partHeader.substring(partHeader.lastIndexOf(".")).replace("\"", "");
-			System.out.println("文件后缀名 " + suffix);
 			// UUID包的randomUUID()生成随机ID
 			String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
-			System.out.println("UUID " + uuid);
 			// 生成文件名，用于写入本地和数据库
 			String fileName = uuid + suffix;
-			System.out.println("文件名 " + fileName);
 			// 写入本地
 			part.write(savePath + File.separator + fileName);
 			System.out.println("文件上传 " + savePath + File.separator + fileName);
@@ -119,6 +118,79 @@ public class InfoServlet extends HttpServlet {
 			} else {
 				System.out.println("头像 更新失败");
 			}
+
+			response.sendRedirect("/nfbbs/InfoServlet");
+			return;
+		}
+
+		String delete = request.getParameter("delete");
+		if (delete != null) {
+			if ("post".equals(delete)) {
+				/*
+				 * 删帖子 ******************************
+				 */
+				// 1、根据帖子的对应回帖数和回帖用户，更新用户的回帖数
+				String pId = request.getParameter("pId");
+				List<String> repostUnameList = RepostDao.selectRepostUname(pId);
+				boolean subtractRepost;
+				for (String rpUname : repostUnameList) {
+					subtractRepost = UserDao.subtractRepost(rpUname);
+
+					if (subtractRepost) {
+						System.out.println(rpUname + " 回帖数-1 成功");
+					} else {
+						System.out.println(rpUname + " 回帖数-1 失败");
+					}
+				}
+				// 2、删除帖子
+				boolean deletePost = PostDao.deletePost(pId);
+
+				if (deletePost) {
+					// 3、更新用户的发帖数
+					boolean subtractPost = UserDao.subtractPost(uName);
+
+					if (subtractPost) {
+						System.out.println("删帖、更新发帖数、更新回帖数 成功");
+					} else {
+						System.out.println(uName + " 发帖-1 失败");
+					}
+				} else {
+					System.out.println("删帖 失败");
+				}
+
+			} else if ("repost".equals(delete)) {
+				/*
+				 * 删回帖 ******************************
+				 */
+				String rpId = request.getParameter("rpId");
+				String rpPid = request.getParameter("rpPid");
+
+				// 1、删回帖
+				boolean deleteRepost = RepostDao.deleteRepost(rpId);
+
+				if (deleteRepost) {
+					// 2、更新用户回帖数
+					boolean subtractRepost = UserDao.subtractRepost(uName);
+
+					if (subtractRepost) {
+						// 3、更新帖子回帖数
+						boolean subtractPostRepost = PostDao.subtractRepost(rpPid);
+
+						if (subtractPostRepost) {
+							System.out.println("删回帖、更新用户回帖数、更新帖子回帖数 成功");
+						} else {
+							System.out.println("帖子回帖数-1 失败");
+						}
+					} else {
+						System.out.println("回帖数-1 失败");
+					}
+				} else {
+					System.out.println("删回帖 失败");
+				}
+			}
+
+			user = UserDao.checkUser(Integer.toString(user.getuId()), user.getuPassword());
+			session.setAttribute("user", user);
 
 			response.sendRedirect("/nfbbs/InfoServlet");
 			return;

@@ -104,7 +104,8 @@
 									<label class="col-xs-2 control-label">密码</label>
 									<div class="col-xs-10 col-sm-7">
 										<input name="uPassword" type="password" class="form-control"
-											value="${sessionScope.user.uPassword}" maxlength="20" required="required" placeholder="不超过20字符">
+											value="${sessionScope.user.uPassword}" maxlength="20" required="required"
+											placeholder="不超过20字符">
 									</div>
 								</div>
 								<div class="form-group">
@@ -121,7 +122,8 @@
 								</div>
 							</form>
 							<hr>
-							<form action="InfoServlet?info=head" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+							<form action="InfoServlet?info=head" method="POST" class="form-horizontal" role="form"
+								enctype="multipart/form-data">
 								<div class="form-group">
 									<label class="col-xs-2 control-label">头像</label>
 									<div class="col-xs-10 col-sm-7">
@@ -145,7 +147,7 @@
 									<h4 class="item-nameAndTime"><small>${post.pTime}</small></h4>
 									<span class="item-text">${post.pContent}</span>
 									<div class="item-delete">
-										<a href="#">删除</a>
+										<a href="InfoServlet?delete=post&pId=${post.pId}">删除</a>
 									</div>
 								</div>
 								<hr>
@@ -156,13 +158,15 @@
 						<div role="tabpanel" class="tab-pane" id="userRepost">
 							<c:forEach items="${requestScope.repostList}" var="repost" varStatus="loop">
 								<div class="userRepost-item">
-									<h4><a
-											href="DetailServlet?pId=${repost.rpPid}"><strong>${requestScope.repostListTitle[loop.count-1]}</strong></a>
+									<h4>
+										<a href="DetailServlet?pId=${repost.rpPid}">
+											<strong>${requestScope.repostListTitle[loop.count-1]}</strong>
+										</a>
 									</h4>
 									<h4 class="item-nameAndTime"><small>${repost.rpTime}</small></h4>
 									<span class="item-text">${repost.rpContent}</span>
 									<div class="item-delete">
-										<a href="#">删除</a>
+										<a href="InfoServlet?delete=repost&rpId=${repost.rpId}&rpPid=${repost.rpPid}">删除</a>
 									</div>
 								</div>
 								<hr>
