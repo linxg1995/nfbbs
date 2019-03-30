@@ -91,7 +91,7 @@
 				<h3>${requestScope.post.pTitle}</h3>
 				<div class="media">
 					<div class="pull-left">
-						<img class="media-object" src="img/head/head.png" alt="头像">
+						<img class="media-object" src="img/head/${requestScope.postHead}" alt="头像" width="40px">
 					</div>
 					<div class="media-body">
 						<h4 class="media-heading">${requestScope.post.pUname}</h4>
@@ -110,10 +110,10 @@
 				<!-- 回帖列表 -->
 				<div id="postDetail-repostList">
 					<hr>
-					<c:forEach items="${requestScope.repostList}" var="repost">
+					<c:forEach items="${requestScope.repostList}" var="repost" varStatus="loop">
 						<div class="media">
 							<div class="pull-left">
-								<img class="media-object" src="img/icon/head.png" alt="头像">
+								<img class="media-object" src="img/head/${requestScope.repostListUhead[loop.count-1]}" alt="头像" width="40px">
 							</div>
 							<div class="media-body">
 								<h4 class="media-heading">${repost.rpUname}</h4>

@@ -104,14 +104,14 @@
 									<label class="col-xs-2 control-label">密码</label>
 									<div class="col-xs-10 col-sm-7">
 										<input name="uPassword" type="password" class="form-control"
-											value="${sessionScope.user.uPassword}" maxlength="20" placeholder="不超过20字符">
+											value="${sessionScope.user.uPassword}" maxlength="20" required="required" placeholder="不超过20字符">
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-xs-2 control-label">昵称</label>
 									<div class="col-xs-10 col-sm-7">
 										<input name="uName" type="text" class="form-control"
-											value="${sessionScope.user.uName}">
+											value="${sessionScope.user.uName}" required="required">
 									</div>
 								</div>
 								<div class="form-group">
@@ -121,11 +121,11 @@
 								</div>
 							</form>
 							<hr>
-							<form action="InfoServlet?info=head" method="POST" class="form-horizontal" role="form">
+							<form action="InfoServlet?info=head" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
 								<div class="form-group">
 									<label class="col-xs-2 control-label">头像</label>
 									<div class="col-xs-10 col-sm-7">
-										<input name="uHead" type="file" class="form-control">
+										<input name="uHead" type="file" class="form-control" required="required">
 									</div>
 								</div>
 								<div class="form-group">

@@ -13,6 +13,7 @@ import bean.PostBean;
 import bean.RepostBean;
 import dao.PostDao;
 import dao.RepostDao;
+import dao.UserDao;
 
 /**
  * Servlet implementation class DetailServlet
@@ -39,14 +40,20 @@ public class DetailServlet extends HttpServlet {
 
 		String pId = request.getParameter("pId");
 		PostBean post = null;
+		String postUhead = null;
 		List<RepostBean> repostList = null;
+		List<String> repostListUhead = null;
 
 		if (pId != null) {
 			post = PostDao.selectPost(pId);
+			postUhead = UserDao.selectPostUhead(pId);
 			repostList = RepostDao.selectRepost(pId);
+			repostListUhead = UserDao.selectRepostUhead(pId);
 
 			request.setAttribute("post", post);
+			request.setAttribute("postHead", postUhead);
 			request.setAttribute("repostList", repostList);
+			request.setAttribute("repostListUhead", repostListUhead);
 		}
 
 		request.getRequestDispatcher("/postdetail.jsp").forward(request, response);

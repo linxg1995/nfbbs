@@ -249,6 +249,35 @@ public class PostDao {
 	}
 
 	/*
+	 * 回帖列表标题（回帖人搜索） ******************************
+	 */
+	public static List<String> selectRepostPtitle(String uName) {
+		String sql = "SELECT rp.*,p.ptitle FROM (SELECT * FROM repost WHERE rpuname=?) rp JOIN post p ON rp.rppid=p.pid ORDER BY rp.rptime DESC";
+		String pTitle = null;
+		List<String> repostListTitle = new ArrayList<String>();
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uName);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				pTitle = new String(rs.getString("p.ptitle"));
+				repostListTitle.add(pTitle);
+			}
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return repostListTitle;
+	}
+
+	/*
 	 * 更新回帖数 ******************************
 	 */
 	public static boolean updateRepost(String pId, String pRptime) {

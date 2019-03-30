@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import bean.UserBean;
 
@@ -63,6 +65,62 @@ public class UserDao {
 	}
 
 	/*
+	 * 发帖人头像 ******************************
+	 */
+	public static String selectPostUhead(String pId) {
+		String sql = "SELECT p.pid,puname,u.uname,u.uhead FROM (SELECT * FROM post WHERE pid=?) p JOIN user u ON p.puname=u.uname";
+		String uHead = null;
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, pId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				uHead = new String(rs.getString("u.uhead"));
+			}
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return uHead;
+	}
+
+	/*
+	 * 回帖人头像 ******************************
+	 */
+	public static List<String> selectRepostUhead(String pId) {
+		String sql = "SELECT rp.rpid,rp.rppid,rp.rpuname,rp.rptime,u.uname,u.uhead FROM (SELECT * FROM repost WHERE rppid=?) rp JOIN user u ON rp.rpuname=u.uname ORDER BY rp.rptime DESC";
+		String uHead = null;
+		List<String> repostListUhead = new ArrayList<String>();
+
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, Integer.parseInt(pId));
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				uHead = new String(rs.getString("u.uhead"));
+				repostListUhead.add(uHead);
+			}
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return repostListUhead;
+	}
+
+	/*
 	 * 更新发帖数 ******************************
 	 */
 	public static boolean updatePost(String uName) {
@@ -92,6 +150,51 @@ public class UserDao {
 			conn = getConn();
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, uName);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
+	 * 更新基本信息 ******************************
+	 */
+	public static boolean updateBasic(int uId, String uNewPassword, String uNewName) {
+		String sql = "UPDATE user SET upassword=?,uname=? WHERE uid=?";
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uNewPassword);
+			ps.setString(2, uNewName);
+			ps.setInt(3, uId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		} finally {
+			restore(conn, ps, rs);
+		}
+
+		return true;
+	}
+
+	/*
+	 * 更新头像 ******************************
+	 */
+	public static boolean updateHead(int uId, String uHead) {
+		String sql = "UPDATE user SET uhead=? WHERE uid=?";
+		try {
+			conn = getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uHead);
+			ps.setInt(2, uId);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO: handle exception
