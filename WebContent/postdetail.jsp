@@ -113,7 +113,8 @@
 					<c:forEach items="${requestScope.repostList}" var="repost" varStatus="loop">
 						<div class="media">
 							<div class="pull-left">
-								<img class="media-object" src="img/head/${requestScope.repostListUhead[loop.count-1]}" alt="头像" width="40px">
+								<img class="media-object" src="img/head/${requestScope.repostListUhead[loop.count-1]}"
+									alt="头像" width="40px">
 							</div>
 							<div class="media-body">
 								<h4 class="media-heading">${repost.rpUname}</h4>
@@ -191,17 +192,18 @@
 				url: "PostServlet?post=repost",
 				data: {
 					rpPid: ${requestScope.post.pId},
-					rpContent: $('textarea.rpContent').val()
+					rpContent: $('textarea.rpContent').val().replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, ' ')
 				},
 				dataType: "text",
 				success: function (response) {
 					var repost = $('#panel-postAndRepost span').last().text();
 					repost++;
 					$('#panel-postAndRepost span').last().text(repost);
-					
+
 					$('#postDetail-repostList>hr').after(response);
 				}
 			});
+			$('textarea.rpContent').val("");
 		});
 	</script>
 </body>

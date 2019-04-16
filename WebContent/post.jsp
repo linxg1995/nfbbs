@@ -71,7 +71,7 @@
 		<div class="row">
 			<!-- 发帖栏 -->
 			<div id="content-post" class="col-md-8 col-sm-7">
-				<form action="PostServlet?post=post" method="POST" class="form-horizontal" role="form">
+				<form action="PostServlet?post=post" method="POST" class="form-horizontal" role="form" onsubmit="beforeSubmit()">
 					<!-- 标题 -->
 					<div class="form-group">
 						<label class="col-sm-2 control-label">标题</label>

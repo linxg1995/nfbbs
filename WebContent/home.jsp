@@ -184,8 +184,8 @@
 
 	<div id="content-copyright" class="container">
 		<hr>
-		<span>Copyright©2019- 南方论坛 All rights reserved.</span> <span>LXG
-			版权所有</span>
+		<span>Copyright©2019- 南方论坛 All rights reserved.</span>
+		<span>LXG 版权所有</span>
 	</div>
 
 	<!-- offcanvas JavaScript -->
